@@ -31,9 +31,19 @@ class BaseWordpressImporter(object):
         ('link', 'link'),
         ('pubdate', 'pubdate'),
         ('guid', ('guid', 'convert_guid')),
-    ]
 
-    comment_mapping = (
+        ('wp:tag_slug', 'tag_slug'),
+        ('wp:tag_name', 'tag_name'),
+        ('wp:term_id', ('term_id', 'convert_int')),
+        ('wp:term_parent', 'term_parent'),
+        ('wp:term_taxonomy', 'term_taxonomy'),
+        ('wp:term_slug', 'term_slug'),
+        ('wp:term_name', 'term_name'),
+
+        ('wp:cat_name', 'category_name'),
+        ('wp:category_nicename', 'category_slug'),
+        ('wp:category_parent', 'category_parent'),
+
         ('wp:comment_id', ('id', 'convert_int')),
         ('wp:comment_author', 'author'),
         ('wp:comment_author_email', 'author_email'),
@@ -46,7 +56,13 @@ class BaseWordpressImporter(object):
         ('wp:comment_parent', ('parent', 'convert_int')),
         ('wp:comment_user_id', ('user_id', 'convert_int')),
         ('wp:comment_type', 'type'),
-    )
+        ('wp:author_id', ('author_id', 'convert_int')),
+        ('wp:author_login', 'author_login'),
+        ('wp:author_email', 'author_email'),
+        ('wp:author_display_name', 'author_display_name'),
+        ('wp:author_first_name', 'author_first_name'),
+        ('wp:author_last_name', 'author_last_name'),
+    ]
 
     def __init__(self, filename, verbosity=0):
         self.verbosity = verbosity
@@ -60,7 +76,6 @@ class BaseWordpressImporter(object):
         return bool(int(tag.string))
 
     def convert_guid(self, tag):
-        print tag
         return {'is_permalink': tag['ispermalink'] == 'true', 'guid': tag.string}
 
     def convert_date(self, tag):
@@ -82,13 +97,13 @@ class BaseWordpressImporter(object):
         }
 
     def convert_comment(self, tag):
-        return self.handle_tag(tag, dict(self.comment_mapping))
+        return self.handle_tag(tag, dict(self.default_mapping))
 
     def parse(self):
-        items = self.xml.findAll('item')
+        items = self.xml.findAll(lambda x: x.parent.name == 'channel')
         for item in items:
-            post_type = item.find('wp:post_type').string
-            if hasattr(self, 'handle_' + post_type):
+            post_type = item.find('wp:post_type') and item.find('wp:post_type').string
+            if post_type and hasattr(self, 'handle_' + post_type):
                 getattr(self, 'handle_' + post_type)(item)
             else:
                 self.handle_default(item)
@@ -124,9 +139,10 @@ class BaseWordpressImporter(object):
                 print "No match: ", child
         return result
 
-    def handle_default(self, item):
+    def handle_default(self, tag):
         mp = dict(self.default_mapping)
-        result = self.handle_tag(item, mp)
+        result = self.handle_tag(tag, mp)
         if self.verbosity > 1:
             from pprint import pprint
             pprint(result)
+        return tag, result
