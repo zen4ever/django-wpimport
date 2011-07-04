@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'south',
     'debug_toolbar',
     'django_extensions',
+    'wpimport',
 )
 
 # A sample logging configuration. The only tangible logging
