@@ -142,6 +142,8 @@ class BaseWordpressImporter(object):
     def handle_default(self, tag):
         mp = dict(self.default_mapping)
         result = self.handle_tag(tag, mp)
+        if not result:
+            result = dict([(tag.name, tag.string)])
         if self.verbosity > 1:
             from pprint import pprint
             pprint(result)
