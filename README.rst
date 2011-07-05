@@ -16,7 +16,7 @@ To install run:
 
 Then add wpimport to your INSTALLED_APPS:
 
-.. code-block:: python
+::
   
   INSTALLED_APPS = [
       # ...
@@ -47,7 +47,7 @@ This module should contain `WordpressImporter` class, inherited from
 To access parsed data you should override `handle_default` method,
 something along the lines:
 
-.. code-block:: python
+::
 
   from wpimport.importer import BaseWordpressImporter
 
