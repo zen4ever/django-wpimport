@@ -147,4 +147,4 @@ class BaseWordpressImporter(object):
         if self.verbosity > 1:
             from pprint import pprint
             pprint(result)
-        return tag, result
+        return result
