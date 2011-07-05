@@ -7,8 +7,8 @@ from wpimport.importer import BaseWordpressImporter
 
 
 class Command(BaseCommand):
-    args = '<filename> - path to whr file'
-    help = 'Imports data from .whr file to an app models using custom importer'
+    args = '<filename> - path to WXR file'
+    help = 'Imports data from WXR file to an app models using custom importer'
 
     option_list = BaseCommand.option_list + (
         make_option('--appname',
