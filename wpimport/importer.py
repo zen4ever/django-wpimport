@@ -115,7 +115,10 @@ class BaseWordpressImporter(object):
             attr = mapping.get(child.name, None)
             if attr:
                 if isinstance(attr, str):
-                    result[attr] = child.string
+                    if child.string:
+                        result[attr] = child.string.encode("utf-8")
+                    else:
+                        result[attr] = child.string
                 elif isinstance(attr, tuple):
                     if len(attr) == 2:
                         attr_name, converter = attr
