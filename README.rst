@@ -1,7 +1,7 @@
 Django WordPress importer
 =========================
 
-An utility app to create custom WordPress importer
+An utility app that helps you to create custom WordPress importer
 for your Django blog application.
 
 Install instructions
