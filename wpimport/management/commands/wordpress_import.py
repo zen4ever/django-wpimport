@@ -11,23 +11,23 @@ class Command(BaseCommand):
     help = 'Imports data from WXR file to an app models using custom importer'
 
     option_list = BaseCommand.option_list + (
-        make_option('--appname',
+        make_option('--importer',
             action='store',
-            dest='appname',
+            dest='importer',
             type="string",
-            help='Fully qualified name of an app'),
+            help='Module which should contain `WordpressImporter` class'),
         )
 
     def handle(self, *args, **options):
         if len(args) != 1:
             raise CommandError("This command takes exactly one argument")
         filename = args[0]
-        appname = options.get('appname', '')
+        importer = options.get('importer', '')
 
         klass = BaseWordpressImporter
-        if appname:
+        if importer:
             try:
-                importer_module = import_module(appname+'.importer')
+                importer_module = import_module(importer)
                 if hasattr(importer_module, 'WordpressImporter'):
                     klass = getattr(importer_module, 'WordpressImporter')
             except ImportError:
