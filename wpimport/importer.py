@@ -158,3 +158,6 @@ class BaseWordpressImporter(object):
             from pprint import pprint
             pprint(result)
         return result
+
+    def parse_done(self):
+        pass

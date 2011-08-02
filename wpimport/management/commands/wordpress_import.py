@@ -35,3 +35,4 @@ class Command(BaseCommand):
 
         importer = klass(filename, verbosity=int(options['verbosity']))
         importer.parse()
+        importer.parse_done()
