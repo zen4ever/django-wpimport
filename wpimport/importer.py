@@ -52,7 +52,7 @@ class BaseWordpressImporter(object):
         ('wp:comment_date', ('date', 'convert_date')),
         ('wp:comment_date_gmt', ('date_gmt', 'convert_date')),
         ('wp:comment_content', 'content'),
-        ('wp:comment_approved', ('approved', 'convert_bool')),
+        ('wp:comment_approved', ('approved', 'convert_approved')),
         ('wp:comment_parent', ('parent', 'convert_int')),
         ('wp:comment_user_id', ('user_id', 'convert_int')),
         ('wp:comment_type', 'type'),
@@ -73,6 +73,13 @@ class BaseWordpressImporter(object):
         return int(tag.string)
 
     def convert_bool(self, tag):
+        if tag.string == 'trash':
+            print tag
+        return bool(int(tag.string))
+
+    def convert_approved(self, tag):
+        if tag.string == 'trash':
+            return tag.string
         return bool(int(tag.string))
 
     def convert_guid(self, tag):
